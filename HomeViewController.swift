@@ -211,8 +211,6 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     func profileImageTapped(tweetCell: TweetCellTableViewCell) {
         let indexPath = tweetListTableView.indexPathForCell(tweetCell)!
         let user = tweets![indexPath.row].user
-        print(user?.screenname)
-        //performSegueWithIdentifier("profileSegue", sender: user)
         let homeViewController = UIStoryboard.homeViewController()
         homeViewController!.user = user
         homeViewController?.currentState = ViewState.Profile
