@@ -22,16 +22,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         return Static.instance
     }
     
-    func homeTimeLineWithParams(params: NSDictionary, completion:(tweets: [Tweet]?, error: NSError?) -> ()) {
-        GET("1.1/statuses/home_timeline.json", parameters: params, success: { (opearation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
-            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
-                completion(tweets: tweets, error: nil)
-            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-                print("Error getting home timeline")
-                completion(tweets: nil, error: error)
-            })
 
-    }
     
     func loginWithCompletion(completion: (user: User?, error: NSError?) -> ()) {
         loginCompletion = completion
@@ -47,6 +38,39 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
                 self.loginCompletion?(user: nil, error: error)
         }
         
+    }
+    
+    func homeTimeLineWithParams(params: NSDictionary, completion:(tweets: [Tweet]?, error: NSError?) -> ()) {
+        GET("1.1/statuses/home_timeline.json", parameters: params, success: { (opearation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+            completion(tweets: tweets, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                print("Error getting home timeline")
+                completion(tweets: nil, error: error)
+        })
+        
+    }
+    
+    
+    func userTimeLineWithParams(params: NSDictionary, completion:(tweets: [Tweet]?, error: NSError?) -> ()) {
+        GET("1.1/statuses/user_timeline.json", parameters: params, success: { (opearation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+            completion(tweets: tweets, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                print("Error getting home timeline")
+                completion(tweets: nil, error: error)
+        })
+        
+    }
+    
+    func mentionsTimeLineWithParams(params: NSDictionary, completion:(tweets: [Tweet]?, error: NSError?) -> ()) {
+        GET("1.1/statuses/mentions_timeline.json", parameters: params, success: { (opearation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+            completion(tweets: tweets, error: nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                print("Error getting home timeline", error)
+                completion(tweets: nil, error: error)
+        })
     }
     
     func favoriteTweet(id:String) {

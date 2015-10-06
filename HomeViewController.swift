@@ -8,15 +8,26 @@
 
 import UIKit
 
+@objc protocol HomeViewControllerDelegate {
+    optional func collapseSidePanels()
+}
+enum ViewState{
+    case Home
+    case Profile
+    case Mentions
+}
 
+class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, TweetCellTableViewCellDelegate, SidePanelViewControllerDelegate {
 
-class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, TweetCellTableViewCellDelegate {
-
+   
     @IBOutlet weak var tweetListTableView: UITableView!
-    
-    var refreshControl: UIRefreshControl!
+    var refreshControl: UIRefreshControl?
     var tweets: [Tweet]?
     var replyTo: String?
+    var currentState = ViewState.Home
+    
+    var delegate: HomeViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -25,14 +36,13 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         tweetListTableView.rowHeight = UITableViewAutomaticDimension
         tweetListTableView.estimatedRowHeight = 100
 
-        // Do any additional setup after loading the view.
         setNavigationButtons()
         addRefreshControl()
-        fetchTweets()
+        fetchHomeTimeLine()
         
-
     }
     
+
     
     func setNavigationButtons() {
         navigationController?.navigationBar.tintColor = UIColor.blueColor()
@@ -40,11 +50,34 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         navigationItem.leftBarButtonItem = signOutButton
         let tweetButton = UIBarButtonItem(title: "Tweet", style: UIBarButtonItemStyle.Plain, target: self, action: "doCompose")
         navigationItem.rightBarButtonItem = tweetButton
+        //navigationItem.title = "XXXX"
     }
     
-    func fetchTweets() {
-        TwitterClient.sharedInstance.homeTimeLineWithParams([:], completion: { (tweets, error) -> () in
-            self.refreshControl.endRefreshing()
+    func fetchHomeTimeLine() {
+                TwitterClient.sharedInstance.homeTimeLineWithParams([:], completion: { (tweets, error) -> () in
+            self.refreshControl?.endRefreshing()
+            if(tweets != nil) {
+                self.tweets = tweets
+                self.tweetListTableView.reloadData()
+            }
+        })
+    }
+    
+    func fetchUserTimeLine() {
+
+        TwitterClient.sharedInstance.userTimeLineWithParams([:], completion: { (tweets, error) -> () in
+            self.refreshControl?.endRefreshing()
+            if(tweets != nil) {
+                self.tweets = tweets
+                self.tweetListTableView.reloadData()
+            }
+        })
+    }
+    
+    func fetchMentionsTimeLine() {
+
+        TwitterClient.sharedInstance.mentionsTimeLineWithParams([:], completion: { (tweets, error) -> () in
+            self.refreshControl?.endRefreshing()
             if(tweets != nil) {
                 self.tweets = tweets
                 self.tweetListTableView.reloadData()
@@ -54,8 +87,8 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     
     func addRefreshControl() {
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-        tweetListTableView.insertSubview(refreshControl, atIndex: 0)
+        refreshControl!.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        tweetListTableView.insertSubview(refreshControl!, atIndex: 0)
     }
     
    
@@ -66,7 +99,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     
     
     func onRefresh() {
-        fetchTweets()
+        fetchHomeTimeLine()
     }
     
     func doSignOut() {
@@ -87,6 +120,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         performSegueWithIdentifier("composeSegue", sender: nil)
     }
     
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let tweets = tweets {
             return tweets.count
@@ -95,8 +129,16 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     }
     
     
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        if(currentState == ViewState.Profile) {
+            if(indexPath.row == 0) {
+                let profileCell = tableView.dequeueReusableCellWithIdentifier("ProfileCell", forIndexPath: indexPath) as! ProfileCell
+                profileCell.configureProfileCell()
+                return profileCell
+            }
+        }
+        
         let tweetCell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCellTableViewCell
         let tweet = tweets![indexPath.row]
         tweetCell.tweet = tweet
@@ -159,5 +201,30 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         }
     }
 
-
+    func reloadView(type: String) {
+        delegate?.collapseSidePanels?()
+        switch type {
+            case "Home":
+                fetchHomeTimeLine()
+                currentState = ViewState.Home
+                break
+            case "Mentions":
+                fetchMentionsTimeLine()
+                currentState = ViewState.Mentions
+                break
+            case "Profile":
+                fetchUserTimeLine()
+                currentState = ViewState.Profile
+                break
+            default:
+                break
+        }
+        navigationItem.title = type
+    }
+    
+    func menuItemSelected(menuItem: MenuItem) {
+        reloadView(menuItem.title)
+    }
 }
+
+
