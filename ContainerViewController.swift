@@ -98,6 +98,7 @@ extension ContainerViewController: HomeViewControllerDelegate {
         if(leftNavExpanded) {
             animateLeftPanel(false)
         }
+        
     }
     
 }

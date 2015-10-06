@@ -27,7 +27,7 @@ class Tweet: NSObject {
         retweeted = dictionary["retweeted"] as! Bool
         let retweetedStatus = dictionary["retweeted_status"] as? NSDictionary
         if let retweetedStatus = retweetedStatus {
-           retweetOfUser = User(dictionary: (retweetedStatus["user"] as! NSDictionary))
+           user = User(dictionary: (retweetedStatus["user"] as! NSDictionary))
            text = retweetedStatus["text"] as? String
         }
         

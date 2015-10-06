@@ -29,6 +29,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     
     var delegate: HomeViewControllerDelegate?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,8 +47,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
                  fetchHomeTimeLine()
             
         case ViewState.Profile:
-                print("Profile called")
-                print(user)
+                setBackNavigationButton()
                 fetchUserTimeLine()
             
         case ViewState.Mentions:
@@ -58,7 +58,6 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         
     }
     
-
     
     func setNavigationButtons() {
         navigationController?.navigationBar.tintColor = UIColor.blueColor()
@@ -66,6 +65,15 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         navigationItem.leftBarButtonItem = signOutButton
         let tweetButton = UIBarButtonItem(title: "Tweet", style: UIBarButtonItemStyle.Plain, target: self, action: "doCompose")
         navigationItem.rightBarButtonItem = tweetButton
+    }
+    
+    func setBackNavigationButton() {
+        let backButton = UIBarButtonItem(title: "<Back", style: UIBarButtonItemStyle.Plain, target: self, action: "goBack")
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
+    func goBack() {
+        navigationController?.popViewControllerAnimated(true)
     }
     
     func fetchHomeTimeLine() {
@@ -203,10 +211,11 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         let indexPath = tweetListTableView.indexPathForCell(tweetCell)!
         let user = tweets![indexPath.row].user
         print(user?.screenname)
-        performSegueWithIdentifier("profileSegue", sender: user)
-    
-        
-        //navigationController?.pushViewController(homeViewController!, animated: true)
+        //performSegueWithIdentifier("profileSegue", sender: user)
+        let homeViewController = UIStoryboard.homeViewController()
+        homeViewController!.user = user
+        homeViewController?.currentState = ViewState.Profile
+        navigationController?.pushViewController(homeViewController!, animated: true)
         
         
     }
@@ -228,12 +237,6 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
                 let detailViewController = segue.destinationViewController as! TweetDetailViewController
                 detailViewController.tweet = tweet
                 break;
-            case "profileSegue":
-                print("HERE!!")
-                let user = sender as! User
-                let profileViewController = segue.destinationViewController as! HomeViewController
-                profileViewController.user = user
-                profileViewController.currentState = ViewState.Profile
             
         default:
             break;
