@@ -6,15 +6,15 @@ Time spent: `<Number of hours spent>`
 
 #### Required
 
-- [ ] Hamburger menu
-   - [ ] Dragging anywhere in the view should reveal the menu.
-   - [ ] The menu should include links to your profile, the home timeline, and the mentions view.
-   - [ ] The menu can look similar to the LinkedIn menu below or feel free to take liberty with the UI.
-- [ ] Profile page
-   - [ ] Contains the user header view
-   - [ ] Contains a section with the users basic stats: # tweets, # following, # followers
-- [ ] Home Timeline
-   - [ ] Tapping on a user image should bring up that user's profile page
+- [X] Hamburger menu
+   - [X] Dragging anywhere in the view should reveal the menu.
+   - [X] The menu should include links to your profile, the home timeline, and the mentions view.
+   - [X] The menu can look similar to the LinkedIn menu below or feel free to take liberty with the UI.
+- [X] Profile page
+   - [X] Contains the user header view
+   - [X] Contains a section with the users basic stats: # tweets, # following, # followers
+- [X] Home Timeline
+   - [X] Tapping on a user image should bring up that user's profile page
 
 #### Optional
 
@@ -30,4 +30,4 @@ Time spent: `<Number of hours spent>`
 
 ### Walkthrough
 
-![Video Walkthrough](https://raw.githubusercontent.com/mvinceable/twitter/master/demo.gif)
+![Video Walkthrough](twotter.gif)
