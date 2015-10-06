@@ -10,6 +10,7 @@ import UIKit
 
 @objc protocol TweetCellTableViewCellDelegate {
     optional func tweetCellTableViewCell(tweetCell: TweetCellTableViewCell, buttonTapped value: String)
+    optional func profileImageTapped(tweetCell: TweetCellTableViewCell)
 }
 
 class TweetCellTableViewCell: UITableViewCell {
@@ -61,10 +62,17 @@ class TweetCellTableViewCell: UITableViewCell {
                 userHandleLabel.text = "@"+tweet.user!.screenname!
                 contentCeilingConstraint.constant = 4
             }
-           
+            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:Selector("imageTapped:"))
+            profileImageView.addGestureRecognizer(tapGestureRecognizer)
+            profileImageView.userInteractionEnabled = true
         }
     }
     
+    func imageTapped( tapGesture:UITapGestureRecognizer) {
+        
+        print("tapped")
+        delegate?.profileImageTapped?(self)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()

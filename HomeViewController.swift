@@ -25,6 +25,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     var tweets: [Tweet]?
     var replyTo: String?
     var currentState = ViewState.Home
+    var user : User?
     
     var delegate: HomeViewControllerDelegate?
     
@@ -36,9 +37,24 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         tweetListTableView.rowHeight = UITableViewAutomaticDimension
         tweetListTableView.estimatedRowHeight = 100
 
-        setNavigationButtons()
+        
         addRefreshControl()
-        fetchHomeTimeLine()
+        
+        switch currentState {
+        case ViewState.Home:
+                 setNavigationButtons()
+                 fetchHomeTimeLine()
+            
+        case ViewState.Profile:
+                print("Profile called")
+                print(user)
+                fetchUserTimeLine()
+            
+        case ViewState.Mentions:
+                setNavigationButtons()
+                fetchMentionsTimeLine()
+        }
+       
         
     }
     
@@ -50,7 +66,6 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         navigationItem.leftBarButtonItem = signOutButton
         let tweetButton = UIBarButtonItem(title: "Tweet", style: UIBarButtonItemStyle.Plain, target: self, action: "doCompose")
         navigationItem.rightBarButtonItem = tweetButton
-        //navigationItem.title = "XXXX"
     }
     
     func fetchHomeTimeLine() {
@@ -64,8 +79,13 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     }
     
     func fetchUserTimeLine() {
-
-        TwitterClient.sharedInstance.userTimeLineWithParams([:], completion: { (tweets, error) -> () in
+        
+        if user == nil {
+            user = User.currentUser
+        }
+        let paramsdict = ["screen_name": user!.screenname!]
+        let params = paramsdict as NSDictionary
+        TwitterClient.sharedInstance.userTimeLineWithParams(params, completion: { (tweets, error) -> () in
             self.refreshControl?.endRefreshing()
             if(tweets != nil) {
                 self.tweets = tweets
@@ -134,7 +154,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         if(currentState == ViewState.Profile) {
             if(indexPath.row == 0) {
                 let profileCell = tableView.dequeueReusableCellWithIdentifier("ProfileCell", forIndexPath: indexPath) as! ProfileCell
-                profileCell.configureProfileCell()
+                profileCell.configureProfileCell(user)
                 return profileCell
             }
         }
@@ -179,6 +199,18 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
         }
     }
     
+    func profileImageTapped(tweetCell: TweetCellTableViewCell) {
+        let indexPath = tweetListTableView.indexPathForCell(tweetCell)!
+        let user = tweets![indexPath.row].user
+        print(user?.screenname)
+        performSegueWithIdentifier("profileSegue", sender: user)
+    
+        
+        //navigationController?.pushViewController(homeViewController!, animated: true)
+        
+        
+    }
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -196,6 +228,13 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
                 let detailViewController = segue.destinationViewController as! TweetDetailViewController
                 detailViewController.tweet = tweet
                 break;
+            case "profileSegue":
+                print("HERE!!")
+                let user = sender as! User
+                let profileViewController = segue.destinationViewController as! HomeViewController
+                profileViewController.user = user
+                profileViewController.currentState = ViewState.Profile
+            
         default:
             break;
         }

@@ -22,14 +22,14 @@ class ProfileCell: UITableViewCell {
         // Initialization code
     }
     
-    func configureProfileCell() {
-        
-        if let profileImageUrl = User.currentUser?.profileImageUrl {
+    func configureProfileCell(user: User?) {
+
+        if let profileImageUrl = user?.profileImageUrl {
             let httpsUrl = profileImageUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
             profileImageView.setImageWithURL(NSURL(string: httpsUrl))
         }
         
-        if let bannerImageUrl = User.currentUser?.bannerImageUrl {
+        if let bannerImageUrl = user?.bannerImageUrl {
             let httpsUrl = bannerImageUrl.stringByReplacingOccurrencesOfString("http://", withString: "https://")
             bannerImageView.setImageWithURL(NSURL(string: httpsUrl))
         }

@@ -131,7 +131,7 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
     
 }
 
-private extension UIStoryboard {
+extension UIStoryboard {
     class func mainStoryboard() -> UIStoryboard { return UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()) }
     
     class func leftViewController() -> SidePanelViewController? {
