@@ -159,8 +159,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="136.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY4-Kr-VZD">
-                                                    <rect key="frame" x="8" y="114" width="42" height="20.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY4-Kr-VZD">
+                                                    <rect key="frame" x="8" y="120" width="31" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -201,7 +201,7 @@
                                                 <constraint firstItem="3yE-hI-Alm" firstAttribute="top" secondItem="OFo-yH-d9P" secondAttribute="top" constant="8" id="IFe-Uz-AVc"/>
                                                 <constraint firstItem="xVD-KF-GQN" firstAttribute="top" secondItem="BY4-Kr-VZD" secondAttribute="top" id="QL7-PL-leL"/>
                                                 <constraint firstAttribute="bottom" secondItem="BY4-Kr-VZD" secondAttribute="bottom" constant="2" id="R6r-9V-mgL"/>
-                                                <constraint firstItem="BY4-Kr-VZD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="3yE-hI-Alm" secondAttribute="bottom" constant="8" id="RfX-Xr-0eH"/>
+                                                <constraint firstItem="BY4-Kr-VZD" firstAttribute="top" secondItem="Qf2-d0-Llb" secondAttribute="bottom" constant="4" id="k1y-kK-NvP"/>
                                                 <constraint firstItem="BY4-Kr-VZD" firstAttribute="leading" secondItem="OFo-yH-d9P" secondAttribute="leading" constant="8" id="r5k-7b-dMs"/>
                                                 <constraint firstItem="34j-YW-ZHz" firstAttribute="top" secondItem="BY4-Kr-VZD" secondAttribute="top" id="rWj-Nv-4CM"/>
                                             </constraints>
