@@ -68,6 +68,7 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     }
     
     func setBackNavigationButton() {
+        navigationItem.title = user?.name
         let backButton = UIBarButtonItem(title: "<Back", style: UIBarButtonItemStyle.Plain, target: self, action: "goBack")
         navigationItem.leftBarButtonItem = backButton
     }
@@ -244,24 +245,30 @@ class HomeViewController: UIViewController,  UITableViewDataSource, UITableViewD
     }
 
     func reloadView(type: String) {
-        delegate?.collapseSidePanels?()
-        switch type {
+        
+        let containerViewController = ContainerViewController()
+        presentViewController(containerViewController, animated: true) { () -> Void in
+            switch type {
             case "Home":
-                fetchHomeTimeLine()
-                currentState = ViewState.Home
-                break
+                containerViewController.homeViewController.currentState = ViewState.Home
+                containerViewController.homeViewController.fetchHomeTimeLine()
+                
             case "Mentions":
-                fetchMentionsTimeLine()
-                currentState = ViewState.Mentions
-                break
+                containerViewController.homeViewController.currentState = ViewState.Mentions
+                containerViewController.homeViewController.fetchMentionsTimeLine()
+                
             case "Profile":
-                fetchUserTimeLine()
-                currentState = ViewState.Profile
-                break
+                containerViewController.homeViewController.currentState = ViewState.Profile
+                containerViewController.homeViewController.fetchUserTimeLine()
+                
             default:
                 break
+            }
+            containerViewController.homeViewController.navigationItem.title = type
+            
         }
-        navigationItem.title = type
+        delegate?.collapseSidePanels?()
+       
     }
     
     func menuItemSelected(menuItem: MenuItem) {
